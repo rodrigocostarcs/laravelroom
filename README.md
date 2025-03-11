@@ -102,9 +102,3 @@ docker-compose exec app php artisan cache:clear
 3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
 4. Push para a branch (`git push origin feature/MinhaFeature`)
 5. Abra um Pull Request
-
-## Licença
-[Especificar a licença do projeto]
-
-## Contato
-Rodrigo Costa - [Seu email ou link do GitHub]
