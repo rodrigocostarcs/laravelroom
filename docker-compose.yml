@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # Aplicação Laravel
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravelroom-app
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - laravelroom-network
+    depends_on:
+      - mysql
+      - redis
+
+  # Servidor Web Nginx
+  nginx:
+    image: nginx:alpine
+    container_name: laravelroom-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - laravelroom-network
+    depends_on:
+      - app
+
+  # Banco de Dados MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: laravelroom-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravelroom
+      MYSQL_USER: laravelroom
+      MYSQL_PASSWORD: laravelroom
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - laravelroom-network
+
+  # Redis
+  redis:
+    image: redis:alpine
+    container_name: laravelroom-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - laravelroom-network
+
+# Volumes para persistência de dados
+volumes:
+  mysql-data:
+
+# Redes
+networks:
+  laravelroom-network:
+    driver: bridge
